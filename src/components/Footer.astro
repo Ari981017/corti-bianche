@@ -1,0 +1,28 @@
+---
+const anno = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="owner">
+      <img src="/img/la-riviera.webp" alt="Logo La Riviera Soc. Agr." width="88" height="58" loading="lazy" />
+      <span>Le Corti Bianche è un caseificio di La Riviera Soc. Agr.<br />[Indirizzo] · P.IVA [numero]</span>
+    </div>
+    <span>© {anno} La Riviera Soc. Agr.</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--inchiostro); color: #B8AF9C; font-size: 14px; }
+  .inner {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+  }
+  .owner { display: flex; align-items: center; gap: 14px; }
+  .owner img { height: 48px; width: auto; }
+</style>

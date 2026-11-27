@@ -1,0 +1,153 @@
+---
+/*
+ * Scena iniziale: tre clip (latte, cagliata, forma) scomposte in fotogrammi
+ * in public/frames/<clip>/NN.webp. Lo scroll fa avanzare i fotogrammi su un
+ * <canvas> e le frasi compaiono una alla volta (stile pagine prodotto Apple).
+ * Logica in src/scripts/hero.ts.
+ */
+---
+
+<section class="hero" id="top" aria-label="Il latte che diventa formaggio">
+  <div class="stage">
+    <canvas class="seq" aria-hidden="true"></canvas>
+    <div class="scrim" aria-hidden="true"></div>
+
+    <div class="captions">
+      <div class="cap k1">
+        <h1>Latte.</h1>
+        <p>Appena munto. Ogni mattina.</p>
+      </div>
+      <div class="cap k2">
+        <p class="h">Tutto comincia <span class="it">da qui.</span></p>
+      </div>
+      <div class="cap k3">
+        <p class="h">Caglio. Calore. <span class="it">Pazienza.</span></p>
+      </div>
+      <div class="cap k4">
+        <p class="h">Poi il tempo <span class="it">fa il resto.</span></p>
+      </div>
+      <div class="cap k5">
+        <p class="h">Le Corti Bianche.</p>
+        <p class="it-sub">Formaggi fatti a mano. Come una volta.</p>
+      </div>
+    </div>
+
+    <div class="hint" aria-hidden="true">
+      <span>Scorri</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+    </div>
+    <div class="prog" aria-hidden="true"></div>
+  </div>
+</section>
+
+<script>
+  import { initHero } from '../scripts/hero';
+  initHero();
+</script>
+
+<style>
+  .hero {
+    --p: 0;
+    position: relative;
+    height: 550vh;
+    height: 550svh;
+    margin-top: calc(-1 * var(--header-h));
+    background: #0E0C09;
+  }
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+  .seq { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 75% 65% at 50% 52%, rgba(10,8,6,.55), rgba(10,8,6,.3) 70%, rgba(10,8,6,.55));
+  }
+
+  .captions {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(1040px, calc(100% - 48px));
+    height: 320px;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #FFFFFF;
+  }
+  .cap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    /* animazioni "in pausa" guidate da --p (0 → 1) */
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+    animation-delay: calc(var(--p) * -1s);
+  }
+  .cap h1, .cap .h {
+    font-family: var(--serif);
+    font-size: clamp(44px, 8.5vw, 116px);
+    line-height: 1;
+    font-weight: 700;
+    text-shadow: 0 2px 40px rgba(0,0,0,.45);
+  }
+  .cap .it { display: block; color: var(--paglia); }
+  .cap p:not(.h) {
+    font-size: clamp(19px, 2.2vw, 28px);
+    color: #F1EADC;
+    text-shadow: 0 1px 20px rgba(0,0,0,.5);
+  }
+  .cap .it-sub { font-family: var(--serif); font-style: italic; }
+
+  .k1 { animation-name: k1; }
+  .k2 { animation-name: k2; }
+  .k3 { animation-name: k3; }
+  .k4 { animation-name: k4; }
+  .k5 { animation-name: k5; }
+
+  @keyframes k1 { 0%, 11% { opacity: 1; transform: none; } 14%, 100% { opacity: 0; transform: translateY(-24px); } }
+  @keyframes k2 { 0%, 15% { opacity: 0; transform: translateY(24px); } 18%, 26% { opacity: 1; transform: none; } 29%, 100% { opacity: 0; transform: translateY(-24px); } }
+  @keyframes k3 { 0%, 36% { opacity: 0; transform: translateY(24px); } 39%, 50% { opacity: 1; transform: none; } 53%, 100% { opacity: 0; transform: translateY(-24px); } }
+  @keyframes k4 { 0%, 60% { opacity: 0; transform: translateY(24px); } 63%, 73% { opacity: 1; transform: none; } 76%, 100% { opacity: 0; transform: translateY(-24px); } }
+  @keyframes k5 { 0%, 80% { opacity: 0; transform: translateY(24px) scale(.97); } 86%, 100% { opacity: 1; transform: none; } }
+
+  .hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #E6DFD0;
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: calc(1 - var(--p) * 20);
+  }
+  .prog {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--paglia);
+    transform-origin: left center;
+    transform: scaleX(var(--p));
+  }
+
+  @media (max-width: 720px) {
+    .captions { height: 260px; }
+    .hint { display: none; }
+  }
+</style>

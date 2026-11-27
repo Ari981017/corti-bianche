@@ -1,0 +1,108 @@
+---
+/* Galleria a mosaico con foto ingrandibile. Per ora segnaposto: sostituire con le foto vere. */
+const foto = [
+  { label: 'Le forme in stagionatura', cls: 'big', tono: '#D8C7A0' },
+  { label: 'Il latte appena arrivato', cls: '', tono: '#CBB78C' },
+  { label: 'Le mani del casaro', cls: 'tall', tono: '#E2D4B4' },
+  { label: 'Il bancone dello spaccio', cls: '', tono: '#BFA97E' },
+  { label: 'Il territorio intorno', cls: 'wide', tono: '#D3BE94' },
+  { label: 'La famiglia al lavoro', cls: '', tono: '#E6DBC2' },
+  { label: 'Dettaglio della crosta', cls: '', tono: '#C7B288' },
+];
+---
+
+<section id="galleria" class="section">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Galleria</span>
+      <h2 class="h-section">Dentro <span class="it">il caseificio.</span></h2>
+      <p class="lead">Tocca una foto per ingrandirla.</p>
+    </div>
+
+    <div class="gallery">
+      {foto.map((f, i) => (
+        <button type="button" class:list={['item', f.cls]} data-index={i} aria-label={`Apri foto: ${f.label}`}>
+          <span class="ph zoom" style={`background:${f.tono}`} data-tone={f.tono}>
+            <span class="ph-label">{f.label}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <dialog class="lightbox" aria-label="Foto ingrandita">
+    <button type="button" class="lb-btn close" aria-label="Chiudi" data-close>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+    </button>
+    <div class="lb-photo ph" data-photo><span class="ph-label" data-label></span></div>
+    <div class="lb-nav">
+      <button type="button" class="lb-btn" aria-label="Foto precedente" data-prev>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+      </button>
+      <span data-count></span>
+      <button type="button" class="lb-btn" aria-label="Foto successiva" data-next>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+      </button>
+    </div>
+  </dialog>
+</section>
+
+<script>
+  const items = [...document.querySelectorAll<HTMLButtonElement>('.gallery .item')];
+  const dlg = document.querySelector<HTMLDialogElement>('.lightbox')!;
+  const photo = dlg.querySelector<HTMLElement>('[data-photo]')!;
+  const label = dlg.querySelector<HTMLElement>('[data-label]')!;
+  const count = dlg.querySelector<HTMLElement>('[data-count]')!;
+  let current = 0;
+
+  const show = (i: number) => {
+    current = (i + items.length) % items.length;
+    const src = items[current].querySelector<HTMLElement>('.ph')!;
+    photo.style.background = src.dataset.tone ?? '';
+    label.textContent = 'Foto: ' + (src.textContent ?? '').trim();
+    count.textContent = `${current + 1} / ${items.length}`;
+  };
+
+  items.forEach((b, i) => b.addEventListener('click', () => { show(i); dlg.showModal(); }));
+  dlg.querySelector('[data-close]')!.addEventListener('click', () => dlg.close());
+  dlg.querySelector('[data-prev]')!.addEventListener('click', () => show(current - 1));
+  dlg.querySelector('[data-next]')!.addEventListener('click', () => show(current + 1));
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(current - 1);
+    if (e.key === 'ArrowRight') show(current + 1);
+  });
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+</script>
+
+<style>
+  .head { display: flex; flex-direction: column; gap: 16px; margin-bottom: 56px; }
+  .gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 220px; gap: 12px; }
+  .big { grid-column: span 2; grid-row: span 2; }
+  .tall { grid-row: span 2; }
+  .wide { grid-column: span 2; }
+  .item { border: 0; padding: 0; background: none; cursor: zoom-in; border-radius: 16px; overflow: hidden; display: block; width: 100%; height: 100%; font: inherit; text-align: left; }
+  .zoom { width: 100%; height: 100%; padding: 14px; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+  .item:hover .zoom, .item:focus-visible .zoom { transform: scale(1.06); }
+  @media (max-width: 720px) {
+    .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 160px; }
+  }
+
+  .lightbox {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 24px;
+    border: 0;
+    background: rgba(10, 9, 7, .93);
+    color: #D8CFBC;
+  }
+  .lightbox[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+  .lightbox::backdrop { background: transparent; }
+  .lb-photo { width: 100%; max-width: 1040px; aspect-ratio: 3 / 2; max-height: 76vh; border-radius: 18px; }
+  .lb-nav { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+  .lb-btn { width: 48px; height: 48px; border-radius: 999px; border: 0; background: rgba(255,255,255,.12); color: #F4EFE3; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .lb-btn:hover { background: rgba(255,255,255,.24); }
+  .close { position: absolute; top: 20px; right: 20px; }
+</style>

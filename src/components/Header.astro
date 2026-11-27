@@ -1,0 +1,66 @@
+---
+interface Props {
+  /** se true l'intestazione si appoggia sopra la scena video */
+  overlay?: boolean;
+}
+const { overlay = false } = Astro.props;
+---
+
+<header class:list={['site-header', { overlay }]}>
+  <div class="container inner">
+    <a href="/" class="brand">Le Corti Bianche</a>
+    <nav aria-label="Principale">
+      <a href="/#storia" class="link">Storia</a>
+      <a href="/prodotti" class="link">Prodotti</a>
+      <a href="/#galleria" class="link">Galleria</a>
+      <a href="/#visita" class="cta">Vieni a trovarci</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--header-h);
+    background: rgba(31, 36, 32, .82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(244, 239, 227, .08);
+  }
+  .inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-size: 23px;
+    font-weight: 700;
+    color: #F4EFE3;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .brand:hover { color: #FFFFFF; }
+  nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
+  .link { color: #D8CFBC; text-decoration: none; }
+  .link:hover { color: #FFFFFF; }
+  .cta {
+    background: #F4EFE3;
+    color: var(--inchiostro);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .cta:hover { background: #FFFFFF; color: var(--inchiostro); }
+
+  @media (max-width: 720px) {
+    .link { display: none; }
+    .brand { font-size: 21px; }
+  }
+</style>

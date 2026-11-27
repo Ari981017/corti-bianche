@@ -1,0 +1,52 @@
+---
+/* Anteprima dei prodotti in home: i primi 3, letti da Supabase nel browser. */
+---
+
+<section id="prodotti" class="section prodotti">
+  <div class="container">
+    <div class="head reveal">
+      <div class="titles">
+        <span class="eyebrow">Prodotti</span>
+        <h2 class="h-section">Freschi. Stagionati. <span class="it">Tutti nostri.</span></h2>
+      </div>
+      <p class="lead">[Una frase su cosa producete e con quale latte.]</p>
+    </div>
+
+    <p class="status" data-status>Caricamento dei prodotti…</p>
+    <div class="pgrid" data-grid></div>
+
+    <a href="/prodotti" class="btn all">Vedi tutti i prodotti</a>
+  </div>
+</section>
+
+<script>
+  import { loadCatalog, productCard } from '../lib/products';
+  import { initReveal } from '../scripts/reveal';
+
+  const status = document.querySelector<HTMLElement>('[data-status]')!;
+  const grid = document.querySelector<HTMLElement>('[data-grid]')!;
+
+  try {
+    const { products, categories } = await loadCatalog(3);
+    const catName = new Map(categories.map((c) => [c.id, c.name]));
+    if (!products.length) {
+      status.textContent = 'I prodotti arrivano presto.';
+    } else {
+      status.remove();
+      for (const p of products) grid.append(productCard(p, catName.get(p.category_id ?? -1)));
+      initReveal();
+    }
+  } catch (e) {
+    console.error(e);
+    status.textContent = 'Non riusciamo a caricare i prodotti in questo momento.';
+  }
+</script>
+
+<style>
+  .prodotti { background: var(--calce-scuro); }
+  .head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 48px; margin-bottom: 64px; }
+  .titles { display: flex; flex-direction: column; gap: 16px; }
+  .head .lead { max-width: 420px; font-size: 18px; }
+  .status { color: var(--testo-2); }
+  .all { margin-top: 48px; }
+</style>
