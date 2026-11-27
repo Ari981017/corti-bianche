@@ -3,26 +3,107 @@ const anno = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="container inner">
-    <div class="owner">
-      <img src="/img/la-riviera.webp" alt="Logo La Riviera Soc. Agr." width="88" height="58" loading="lazy" />
-      <span>Le Corti Bianche è un caseificio di La Riviera Soc. Agr.<br />[Indirizzo] · P.IVA [numero]</span>
+  <div class="container">
+    <div class="top">
+      <div class="brand-col">
+        <a href="/" class="brand">Le Corti Bianche</a>
+        <p class="tagline">Formaggi fatti a mano. <span>Come una volta.</span></p>
+      </div>
+
+      <div class="col">
+        <h2>Vieni a trovarci</h2>
+        <p>[Via e numero]<br />[Comune]</p>
+        <p class="muted">[Giorni e orari dello spaccio]</p>
+      </div>
+
+      <div class="col">
+        <h2>Contatti</h2>
+        <p>[Telefono]<br />[Email]</p>
+        <a href="#" class="social">Instagram</a>
+      </div>
+
+      <nav class="col" aria-label="Pagine">
+        <h2>Il sito</h2>
+        <a href="/#storia">Storia</a>
+        <a href="/prodotti">Prodotti</a>
+        <a href="/#galleria">Galleria</a>
+        <a href="/#visita">Apertura</a>
+      </nav>
     </div>
-    <span>© {anno} La Riviera Soc. Agr.</span>
+
+    <div class="bottom">
+      <div class="owner">
+        <img src="/img/la-riviera.webp" alt="Logo La Riviera Soc. Agr." width="80" height="53" loading="lazy" />
+        <span>Le Corti Bianche è un caseificio di La Riviera Soc. Agr.<br />P.IVA [numero]</span>
+      </div>
+      <div class="legal">
+        <a href="#">Privacy</a>
+        <span>© {anno} La Riviera Soc. Agr.</span>
+      </div>
+    </div>
   </div>
 </footer>
 
 <style>
-  .site-footer { background: var(--inchiostro); color: #B8AF9C; font-size: 14px; }
-  .inner {
-    padding-top: 40px;
-    padding-bottom: 40px;
+  .site-footer {
+    background: var(--inchiostro);
+    color: #D8CFBC;
+    font-size: 16px;
+  }
+  .top {
+    padding: 88px 0 56px;
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+    gap: 40px 48px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    color: #F4EFE3;
+    text-decoration: none;
+  }
+  .brand:hover { color: #FFFFFF; }
+  .tagline { margin-top: 14px; font-family: var(--serif); font-size: 22px; color: #D8CFBC; }
+  .tagline span { font-style: italic; color: var(--paglia); }
+
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .col h2 {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--paglia);
+    margin-bottom: 6px;
+  }
+  .col a { color: #F4EFE3; text-decoration: none; width: fit-content; }
+  .col a:hover { color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; }
+  .muted { color: #A39A87; font-size: 15px; }
+
+  .bottom {
+    border-top: 1px solid rgba(244, 239, 227, .12);
+    padding: 28px 0 32px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 16px 32px;
+    font-size: 14px;
+    color: #A39A87;
   }
   .owner { display: flex; align-items: center; gap: 14px; }
-  .owner img { height: 48px; width: auto; }
+  .owner img { height: 44px; width: auto; }
+  .legal { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+  .legal a { color: #A39A87; }
+  .legal a:hover { color: #F4EFE3; }
+
+  @media (max-width: 900px) {
+    .top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .brand-col { grid-column: 1 / -1; }
+  }
+  @media (max-width: 520px) {
+    .top { grid-template-columns: 1fr; padding-top: 64px; }
+  }
 </style>
