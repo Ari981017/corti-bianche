@@ -1,0 +1,53 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Prodotti – Le Corti Bianche">
+  <h1>I nostri prodotti</h1>
+  <p id="status">Caricamento…</p>
+  <div id="products" class="grid"></div>
+
+  <template id="product-card">
+    <article class="card">
+      <img loading="lazy" />
+      <h2></h2>
+      <p class="desc"></p>
+      <p class="price"></p>
+    </article>
+  </template>
+</Layout>
+
+<script>
+  import { supabase, imageUrl, formatPrice } from '../../lib/supabase';
+
+  const status = document.getElementById('status')!;
+  const grid = document.getElementById('products')!;
+  const tpl = document.getElementById('product-card') as HTMLTemplateElement;
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('name, slug, description, price, unit, image_path, categories(name)')
+    .order('position');
+
+  if (error) {
+    status.textContent = 'Errore nel caricamento dei prodotti.';
+  } else if (!data.length) {
+    status.textContent = 'Nessun prodotto disponibile.';
+  } else {
+    status.remove();
+    for (const p of data) {
+      const card = tpl.content.cloneNode(true) as DocumentFragment;
+      const img = card.querySelector('img')!;
+      img.src = p.image_path ? (imageUrl(p.image_path) ?? '') : '';
+      img.alt = p.name;
+      card.querySelector('h2')!.textContent = p.name;
+      card.querySelector('.desc')!.textContent = p.description ?? '';
+      card.querySelector('.price')!.textContent = formatPrice(p.price, p.unit);
+      grid.append(card);
+    }
+  }
+</script>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem; }
+  .card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; }
+</style>
