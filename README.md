@@ -1,46 +1,56 @@
-# Astro Starter Kit: Basics
+# Le Corti Bianche
+
+Sito del caseificio Le Corti Bianche (La Riviera Soc. Agr.): Astro + Supabase, pubblicato su Netlify.
+
+## Avvio in locale
 
 ```sh
-npm create astro@latest -- --template basics
+cp .env.example .env   # inserisci URL e chiave anon/publishable di Supabase
+npm install
+npm run dev            # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Pagine
 
-## 🚀 Project Structure
+| Percorso    | Cosa c'è |
+| :---------- | :------- |
+| `/`         | Scena video guidata dallo scroll, storia, anteprima prodotti, galleria, apertura |
+| `/prodotti` | Catalogo completo raggruppato per categoria (dati letti da Supabase) |
+| `/admin`    | Pannello per la famiglia: accesso, prodotti, prezzi, foto, categorie |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Struttura
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+public/frames/{latte,cagliata,forma}/NN.webp   fotogrammi della scena iniziale
+public/img/la-riviera.webp                     logo della società (piè di pagina)
+src/components/                                sezioni della home, header, footer
+src/scripts/hero.ts                            animazione allo scroll (clip, dissolvenze)
+src/scripts/admin.ts                           logica del pannello
+src/lib/supabase.ts                            client, tipi, formattazione prezzi
+src/lib/products.ts                            lettura catalogo e schede prodotto
+src/lib/image.ts                               ridimensionamento foto prima dell'upload
+supabase/schema.sql                            schema di riferimento (tabelle, RLS, storage)
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Pannello admin
 
-## 🧞 Commands
+1. In Supabase crea l'utente (Authentication → Users → Add user).
+2. Aggiungilo agli admin: `insert into public.admins (user_id) values ('UUID');`
+3. Registrazioni pubbliche e accessi anonimi devono restare disattivati.
 
-All commands are run from the root of the project, from a terminal:
+Le modifiche fatte nel pannello compaiono subito sul sito: le pagine leggono i dati da Supabase a ogni visita, senza ripubblicare.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Sostituire i video della scena iniziale
 
-## 👀 Want to learn more?
+Da ogni clip si estraggono i fotogrammi (uno ogni due), larghi 1024 px, in WebP:
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```sh
+ffmpeg -i clip.mp4 -an -vf "select=not(mod(n\,2)),scale=1024:-2" -vsync vfr -c:v libwebp -quality 60 %02d.webp
+```
+
+Mettili in `public/frames/<clip>/` e, se il numero cambia, aggiorna `count` in `src/scripts/hero.ts`.
+
+## Netlify
+
+Build: `npm run build`, cartella `dist` (già in `netlify.toml`).
+Variabili d'ambiente: `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_KEY`.

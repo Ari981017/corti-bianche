@@ -1,0 +1,43 @@
+---
+/* Dati dello spaccio: da completare (o da spostare su Supabase se la famiglia deve poterli cambiare). */
+---
+
+<section id="visita" class="section visita">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Apertura</span>
+      <h2 class="h-section">Ci vediamo presto. <span class="it">Davvero presto.</span></h2>
+      <p class="lead">Apriamo [data di apertura]. Passa a trovarci e a conoscerci.</p>
+    </div>
+
+    <dl class="info reveal">
+      <div><dt>Dove</dt><dd>[Via e numero]<br />[Comune]</dd></div>
+      <div><dt>Orari dello spaccio</dt><dd>[Giorni]<br />[Orari]</dd></div>
+      <div><dt>Contatti</dt><dd>[Telefono]<br />[Email]</dd></div>
+    </dl>
+
+    <div class="actions">
+      <a href="#" class="btn btn-chiaro">Come arrivare</a>
+      <a href="#" class="btn btn-ghost">Seguici su Instagram</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .visita { background: var(--verde); color: #F4EFE3; }
+  .visita .eyebrow { color: #D9E2D3; }
+  .visita .it { color: var(--paglia); }
+  .visita .lead { color: #E6ECE2; }
+  .head { display: flex; flex-direction: column; gap: 20px; max-width: 760px; }
+  .info {
+    margin: 64px 0 0;
+    padding-top: 40px;
+    border-top: 1px solid rgba(244, 239, 227, .25);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+  }
+  dt { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #D9E2D3; margin-bottom: 8px; }
+  dd { margin: 0; font-size: 18px; }
+  .actions { margin-top: 48px; display: flex; flex-wrap: wrap; gap: 12px; }
+</style>

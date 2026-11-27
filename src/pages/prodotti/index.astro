@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Prodotti – Le Corti Bianche" description="I formaggi di Le Corti Bianche: freschi, semistagionati e stagionati, con prezzi aggiornati.">
+  <section class="section">
+    <div class="container">
+      <div class="head">
+        <span class="eyebrow">Prodotti</span>
+        <h1 class="h-section">Freschi. Stagionati. <span class="it">Tutti nostri.</span></h1>
+        <p class="lead">Prezzi e disponibilità sono aggiornati dal caseificio. Per ordini e prenotazioni chiamaci o passa allo spaccio.</p>
+      </div>
+
+      <nav class="cats" aria-label="Categorie" data-cats hidden></nav>
+      <p class="status" data-status>Caricamento dei prodotti…</p>
+      <div data-list></div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { loadCatalog, productCard } from '../../lib/products';
+  import { initReveal } from '../../scripts/reveal';
+  import type { Product } from '../../lib/supabase';
+
+  const status = document.querySelector<HTMLElement>('[data-status]')!;
+  const list = document.querySelector<HTMLElement>('[data-list]')!;
+  const nav = document.querySelector<HTMLElement>('[data-cats]')!;
+
+  try {
+    const { products, categories } = await loadCatalog();
+    if (!products.length) {
+      status.textContent = 'I prodotti arrivano presto.';
+    } else {
+      status.remove();
+
+      // raggruppa per categoria, nell'ordine scelto nel pannello
+      const groups: { id: string; name: string; items: Product[] }[] = categories.map((c) => ({
+        id: c.slug,
+        name: c.name,
+        items: products.filter((p) => p.category_id === c.id),
+      }));
+      const others = products.filter((p) => !categories.some((c) => c.id === p.category_id));
+      if (others.length) groups.push({ id: 'altri', name: 'Altri prodotti', items: others });
+
+      for (const g of groups.filter((g) => g.items.length)) {
+        const link = document.createElement('a');
+        link.href = `#${g.id}`;
+        link.textContent = g.name;
+        nav.append(link);
+
+        const section = document.createElement('section');
+        section.id = g.id;
+        section.className = 'group';
+        const h2 = document.createElement('h2');
+        h2.textContent = g.name;
+        const grid = document.createElement('div');
+        grid.className = 'pgrid';
+        for (const p of g.items) grid.append(productCard(p));
+        section.append(h2, grid);
+        list.append(section);
+      }
+      nav.hidden = nav.children.length < 2;
+      initReveal();
+    }
+  } catch (e) {
+    console.error(e);
+    status.textContent = 'Non riusciamo a caricare i prodotti in questo momento. Riprova tra poco.';
+  }
+</script>
+
+<style>
+  .head { display: flex; flex-direction: column; gap: 20px; max-width: 820px; }
+  .cats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 48px; }
+  .cats :global(a) {
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--calce-scuro);
+    color: var(--verde);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .cats :global(a:hover) { background: var(--paglia); }
+  .status { margin-top: 48px; color: var(--testo-2); }
+  [data-list] :global(.group) { margin-top: 72px; scroll-margin-top: calc(var(--header-h) + 24px); }
+  [data-list] :global(.group h2) { font-size: 44px; margin-bottom: 28px; }
+</style>

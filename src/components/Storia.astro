@@ -1,0 +1,66 @@
+---
+const capitoli = [
+  {
+    n: '01',
+    titolo: 'Chi siamo',
+    testo: '[Presentate la famiglia: nomi, ruoli, cosa faceva ognuno prima del caseificio.]',
+    foto: 'Foto: la famiglia davanti al caseificio',
+    tono: '#D8C7A0',
+  },
+  {
+    n: '02',
+    titolo: 'Il caseificio',
+    testo: '[La storia del posto: da quanto esiste, chi lo gestiva, cosa produceva.]',
+    foto: "Foto: l'edificio o il laboratorio",
+    tono: '#CBB78C',
+  },
+  {
+    n: '03',
+    titolo: 'Da adesso',
+    testo: '[Cosa volete portare voi: prodotti, spaccio, idee per il futuro.]',
+    foto: 'Foto: il casaro al lavoro',
+    tono: '#E2D4B4',
+  },
+];
+---
+
+<section id="storia" class="section">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">La nostra storia</span>
+      <h2 class="h-section">Una famiglia. Un caseificio. <span class="it">Una sola regola.</span></h2>
+      <p class="lead">[La vostra regola, per esempio: solo il latte delle nostre stalle. Poi due righe su chi siete.]</p>
+    </div>
+
+    <div class="chapters">
+      {capitoli.map((c, i) => (
+        <div class:list={['chapter', { rev: i % 2 === 1 }]}>
+          <div class="media ph" style={`background:${c.tono}`}>
+            <span class="ph-label">{c.foto}</span>
+          </div>
+          <div class="text reveal">
+            <span class="num it">{c.n}</span>
+            <h3>{c.titolo}</h3>
+            <p>{c.testo}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .head { display: flex; flex-direction: column; gap: 20px; max-width: 760px; }
+  .chapters { margin-top: 120px; display: flex; flex-direction: column; gap: 140px; }
+  .chapter { display: flex; flex-wrap: wrap; align-items: center; gap: 40px 64px; }
+  .chapter.rev { flex-direction: row-reverse; }
+  .media { flex: 1 1 420px; aspect-ratio: 4 / 3; border-radius: var(--radius); }
+  .text { flex: 1 1 320px; display: flex; flex-direction: column; gap: 14px; }
+  .num { font-size: 56px; line-height: 1; color: var(--verde); }
+  h3 { font-size: 44px; }
+  .text p { color: var(--testo-2); }
+  @media (max-width: 720px) {
+    .chapters { margin-top: 72px; gap: 80px; }
+    .chapter.rev { flex-direction: row; }
+  }
+</style>
