@@ -8,6 +8,9 @@ export async function loadCatalog(limit?: number) {
   let q = supabase
     .from('products')
     .select('id, name, slug, description, price, unit, category_id, image_path, is_available, position')
+    // filtro esplicito: se chi guarda è loggato come admin, le regole RLS
+    // gli farebbero vedere anche i prodotti nascosti
+    .eq('is_available', true)
     .order('position')
     .order('name');
   if (limit) q = q.limit(limit);

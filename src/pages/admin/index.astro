@@ -123,8 +123,8 @@ import Layout from '../../layouts/Layout.astro';
   initAdmin();
 </script>
 
-<style>
-  :global(body) { background: var(--calce); }
+<style is:global>
+  body { background: var(--calce); }
   .muted { color: var(--testo-3); }
   .small { font-size: 14px; }
   .error { color: #B3261E; font-size: 15px; min-height: 1em; }
@@ -177,28 +177,28 @@ import Layout from '../../layouts/Layout.astro';
 
   /* lista prodotti */
   .plist, .clist { list-style: none; margin: 0 0 80px; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-  .plist :global(li) { background: var(--bianco); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--bordo); padding: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-  .plist :global(li.off) { opacity: .65; }
-  .plist :global(.thumb) { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; flex: 0 0 auto; background: #E6DBC2; }
-  .plist :global(.pinfo) { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .plist :global(.pname) { font-family: var(--serif); font-size: 24px; font-weight: 600; line-height: 1.1; }
-  .plist :global(.pmeta) { font-size: 15px; color: var(--testo-3); }
-  .plist :global(.pactions) { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-  .plist :global(.empty), .clist :global(.empty) { background: transparent; box-shadow: none; color: var(--testo-3); }
+  .plist li { background: var(--bianco); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--bordo); padding: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .plist li.off { opacity: .65; }
+  .plist .thumb { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; flex: 0 0 auto; background: #E6DBC2; }
+  .plist .pinfo { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .plist .pname { font-family: var(--serif); font-size: 24px; font-weight: 600; line-height: 1.1; }
+  .plist .pmeta { font-size: 15px; color: var(--testo-3); }
+  .plist .pactions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .plist .empty, .clist .empty { background: transparent; box-shadow: none; color: var(--testo-3); }
 
   /* interruttore */
-  .switch-label, .plist :global(.switch-label) { flex-direction: row; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
-  .switch, .plist :global(.switch) { appearance: none; width: 48px; height: 28px; border-radius: 999px; background: #CFC7B4; position: relative; cursor: pointer; transition: background .2s; flex: 0 0 auto; margin: 0; }
-  .switch::after, .plist :global(.switch::after) { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; }
-  .switch:checked, .plist :global(.switch:checked) { background: var(--verde); }
-  .switch:checked::after, .plist :global(.switch:checked::after) { transform: translateX(20px); }
+  .switch-label, .plist .switch-label { flex-direction: row; align-items: center; gap: 10px; font-weight: 600; cursor: pointer; }
+  .switch, .plist .switch { appearance: none; width: 48px; height: 28px; border-radius: 999px; background: #CFC7B4; position: relative; cursor: pointer; transition: background .2s; flex: 0 0 auto; margin: 0; }
+  .switch::after, .plist .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .2s; }
+  .switch:checked, .plist .switch:checked { background: var(--verde); }
+  .switch:checked::after, .plist .switch:checked::after { transform: translateX(20px); }
 
   /* categorie */
   .cat-add { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 16px; }
   .cat-add label { flex: 1 1 240px; }
-  .clist :global(li) { background: var(--bianco); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--bordo); padding: 12px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
-  .clist :global(.cname) { flex: 1 1 220px; }
-  .clist :global(.cpos) { flex: 0 0 110px; }
+  .clist li { background: var(--bianco); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--bordo); padding: 12px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+  .clist .cname { flex: 1 1 220px; }
+  .clist .cpos { flex: 0 0 110px; }
 
   /* scheda prodotto */
   .pdialog { width: min(640px, calc(100% - 24px)); max-height: calc(100% - 24px); border: 0; border-radius: 22px; padding: 0; background: var(--calce); color: var(--testo); }
@@ -216,6 +216,7 @@ import Layout from '../../layouts/Layout.astro';
   .pform-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; background: var(--calce); padding-top: 8px; }
 
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140%); background: var(--inchiostro); color: #F4EFE3; padding: 14px 22px; border-radius: 999px; font-weight: 600; transition: transform .3s; z-index: 200; max-width: calc(100% - 32px); }
+  .toast:not(.show) { visibility: hidden; transition: transform .3s, visibility 0s .3s; }
   .toast.show { transform: translate(-50%, 0); }
   .toast.err { background: #B3261E; }
 

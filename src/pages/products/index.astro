@@ -26,6 +26,7 @@ import Layout from '../../layouts/Layout.astro';
   const { data, error } = await supabase
     .from('products')
     .select('name, slug, description, price, unit, image_path, categories(name)')
+    .eq('is_available', true)
     .order('position');
 
   if (error) {
