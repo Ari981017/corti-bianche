@@ -24,6 +24,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* l'attributo hidden deve vincere su qualsiasi display impostato nei componenti */
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 

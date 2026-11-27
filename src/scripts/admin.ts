@@ -64,9 +64,12 @@ function show(view: 'login' | 'app') {
 async function enter(email: string) {
   const { data: ok, error } = await supabase.rpc('is_admin');
   if (error || !ok) {
+    if (error) console.error('is_admin()', error);
     await supabase.auth.signOut();
     show('login');
-    $('[data-login-error]').textContent = 'Questo account non è abilitato al pannello.';
+    $('[data-login-error]').textContent = error
+      ? `Impossibile verificare i permessi (is_admin): ${error.message}`
+      : 'Questo account non è abilitato al pannello.';
     return;
   }
   $('[data-user]').textContent = email;
